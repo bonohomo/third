@@ -44,11 +44,14 @@ class Search extends React.Component {
     }
 
     render() {
-        let limit = 10;
-        let totalPage = Math.ceil(this.props.totalCount / limit);
+        const limit = 10;
+        const pagesPerGroup = 10;
+        const totalPage = Math.ceil(this.props.totalCount / limit);
+        const firstPage = Math.floor((this.state.page - 1) / pagesPerGroup) * pagesPerGroup + 1;
+        const lastPage = Math.min(firstPage + pagesPerGroup - 1, totalPage);
+        const num = [];
 
-        let num = [];
-        for (let i = 1; i <= totalPage; i++) {
+        for (let i = firstPage; i <= lastPage; i++) {
             num.push(i);
         }
         return (
@@ -85,7 +88,13 @@ class Search extends React.Component {
                     <div className="items">
                         {
                             num.map((el) =>
-                                <button className="btn" key={el} onClick={() => this.changePage(el)} disabled={this.state.page === el}>{el}</button>
+                                <button
+                                    className="btn page-button"
+                                    key={el}
+                                    onClick={() => this.changePage(el)}
+                                    disabled={this.state.page === el}
+                                    aria-current={this.state.page === el ? "page" : undefined}
+                                >{el}</button>
                             )
                         }
                     </div>

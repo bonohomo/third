@@ -38,3 +38,10 @@
     margin-right: 60px;
     font-size: 20px;
 }
+
+.page-button:disabled {
+    background: #808080;
+    border-color: #808080;
+    color: #FFF;
+    cursor: default;
+}
