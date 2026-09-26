@@ -16,7 +16,14 @@ class Search extends React.Component {
 
     handlerFilter = (event) => {
         this.setState(
-            { type: event.target.dataset.type },
+            { type: event.target.dataset.type, page: 1 },
+            () => { this.props.searchMovie(this.state.search, this.state.type, this.state.page) }
+        );
+    }
+
+    changePage = (page) => {
+        this.setState(
+            { page },
             () => { this.props.searchMovie(this.state.search, this.state.type, this.state.page) }
         );
     }
@@ -29,26 +36,21 @@ class Search extends React.Component {
     }
 
     nextPage = () => {
-        this.setState(
-            { page: this.state.page + 1 },
-            () => { this.props.searchMovie(this.state.search, this.state.type, this.state.page) }
-        )
+        const totalPage = Math.ceil(this.props.totalCount / 10);
 
+        if (this.state.page < totalPage) {
+            this.changePage(this.state.page + 1);
+        }
     }
 
     render() {
-        console.log(this.state.page);
         let limit = 10;
         let totalPage = Math.ceil(this.props.totalCount / limit);
-        console.log(totalPage);
 
         let num = [];
         for (let i = 1; i <= totalPage; i++) {
             num.push(i);
         }
-        console.log(num);
-        
-
         return (
             <>
                 <div className="search">
@@ -61,7 +63,7 @@ class Search extends React.Component {
                     />
                     <button
                         className="btn"
-                        onClick={() => this.props.searchMovie(this.state.search, this.state.type, this.state.page)}
+                        onClick={() => this.changePage(1)}
                     >Search</button>
                 </div>
                 <div className="radio">
@@ -79,15 +81,15 @@ class Search extends React.Component {
                     </label>
                 </div>
                 <div className="navigation">
-                    <button className="btn" onClick={this.prevPage} style={{ opacity: this.state.page === 1 ? ".5" : "1" }}>Prev</button>
+                    <button className="btn" onClick={this.prevPage} disabled={this.state.page === 1}>Prev</button>
                     <div className="items">
                         {
-                            num.map((el, index) =>
-                                <button className="btn" key={index}>{el}</button>
+                            num.map((el) =>
+                                <button className="btn" key={el} onClick={() => this.changePage(el)} disabled={this.state.page === el}>{el}</button>
                             )
                         }
                     </div>
-                    <button className="btn" onClick={this.nextPage}>Next</button>
+                    <button className="btn" onClick={this.nextPage} disabled={this.state.page === totalPage}>Next</button>
                 </div>
             </>
         )
