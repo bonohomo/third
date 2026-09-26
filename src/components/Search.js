@@ -44,12 +44,12 @@ class Search extends React.Component {
     }
 
     render() {
-        const limit = 10;
-        const pagesPerGroup = 10;
-        const totalPage = Math.ceil(this.props.totalCount / limit);
-        const firstPage = Math.floor((this.state.page - 1) / pagesPerGroup) * pagesPerGroup + 1;
-        const lastPage = Math.min(firstPage + pagesPerGroup - 1, totalPage);
-        const num = [];
+        let limit = 10;
+        let pagesPerGroup = 10;
+        let totalPage = Math.ceil(this.props.totalCount / limit);
+        let firstPage = Math.floor((this.state.page - 1) / pagesPerGroup) * pagesPerGroup + 1;
+        let lastPage = Math.min(firstPage + pagesPerGroup - 1, totalPage);
+        let num = [];
 
         for (let i = firstPage; i <= lastPage; i++) {
             num.push(i);
@@ -84,21 +84,24 @@ class Search extends React.Component {
                     </label>
                 </div>
                 <div className="navigation">
-                    <button className="btn" onClick={this.prevPage} disabled={this.state.page === 1}>Prev</button>
+                    <button className="btn" onClick={this.prevPage} disabled={this.state.page === 1} style={{opacity: this.state.page === 1 ? ".5" : "1"}}>Prev</button>
                     <div className="items">
-                        {
-                            num.map((el) =>
+                        {num.map((el) => {
+                            console.log('page:', this.state.page, 'button:', el);
+
+                            return (
                                 <button
                                     className="btn page-button"
                                     key={el}
                                     onClick={() => this.changePage(el)}
                                     disabled={this.state.page === el}
-                                    aria-current={this.state.page === el ? "page" : undefined}
-                                >{el}</button>
-                            )
-                        }
+                                >
+                                    {el}
+                                </button>
+                            );
+                        })}
                     </div>
-                    <button className="btn" onClick={this.nextPage} disabled={this.state.page === totalPage}>Next</button>
+                    <button className="btn" onClick={this.nextPage} disabled={this.state.page === totalPage} style={{opacity: this.state.page === totalPage ? ".5" : "1"}}>Next</button>
                 </div>
             </>
         )
